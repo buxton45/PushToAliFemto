@@ -394,7 +394,6 @@ void AliFemtoCorrFctnKStar::FillDEtaDPhiS(TH2D* aHist, AliFemtoPair* aPair)
 
   if (!aodH) {
     //AliWarning("Could not get AODInputHandler");
-    cout << "Could not get AODInputHandler" << endl;
   }
   else {
     AliAODEvent *fAOD;
