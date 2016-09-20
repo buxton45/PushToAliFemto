@@ -16,8 +16,17 @@ ClassImp(AliFemtoESDTrackCutNSigmaFilter)
 
 //________________________________________________________________________________________________________________
 AliFemtoESDTrackCutNSigmaFilter::AliFemtoESDTrackCutNSigmaFilter() :
-  AliFemtoESDTrackCut(),
-  fPionRejection(false)
+  AliFemtoESDTrackCut()
+  , fUseCustomPionNSigmaFilter(false)
+  , fUseCustomKaonNSigmaFilter(false)
+  , fUseCustomProtonNSigmaFilter(false)
+  , fUseCustomElectronNSigmaFilter(false)
+
+  , fPionNSigmaFilter(NULL)
+  , fKaonNSigmaFilter(NULL)
+  , fProtonNSigmaFilter(NULL)
+  , fElectronNSigmaFilter(NULL)
+  , fPionRejection(false)
 {
 
 }
@@ -25,6 +34,10 @@ AliFemtoESDTrackCutNSigmaFilter::AliFemtoESDTrackCutNSigmaFilter() :
 //________________________________________________________________________________________________________________
 AliFemtoESDTrackCutNSigmaFilter::AliFemtoESDTrackCutNSigmaFilter(const AliFemtoESDTrackCutNSigmaFilter& aCut):
   AliFemtoESDTrackCut(aCut),
+  fUseCustomPionNSigmaFilter(aCut.fUseCustomPionNSigmaFilter),
+  fUseCustomKaonNSigmaFilter(aCut.fUseCustomKaonNSigmaFilter),
+  fUseCustomProtonNSigmaFilter(aCut.fUseCustomProtonNSigmaFilter),
+  fUseCustomElectronNSigmaFilter(aCut.fUseCustomElectronNSigmaFilter),
   fPionRejection(aCut.fPionRejection)
 {
 
@@ -38,6 +51,10 @@ AliFemtoESDTrackCutNSigmaFilter& AliFemtoESDTrackCutNSigmaFilter::operator=(cons
 
   AliFemtoESDTrackCut::operator=(aCut);
 
+  fUseCustomPionNSigmaFilter = aCut.fUseCustomPionNSigmaFilter;
+  fUseCustomKaonNSigmaFilter = aCut.fUseCustomKaonNSigmaFilter;
+  fUseCustomProtonNSigmaFilter = aCut.fUseCustomProtonNSigmaFilter;
+  fUseCustomElectronNSigmaFilter = aCut.fUseCustomElectronNSigmaFilter;
   fPionRejection = aCut.fPionRejection;
 }
 
@@ -46,50 +63,6 @@ AliFemtoESDTrackCutNSigmaFilter& AliFemtoESDTrackCutNSigmaFilter::operator=(cons
 AliFemtoESDTrackCutNSigmaFilter::~AliFemtoESDTrackCutNSigmaFilter()
 {
   cout << "AliFemtoESDTrackCutNSigmaFilter object is being deleted!!!" << endl;
-}
-
-//________________________________________________________________________________________________________________
-bool AliFemtoESDTrackCutNSigmaFilter::IsKaonNSigma(float mom, float nsigmaTPCK, float nsigmaTOFK)
-{
-  if (fNsigmaTPCTOF) {
-    if (mom > 0.5) {
-      //        if (TMath::Hypot( nsigmaTOFP, nsigmaTPCP )/TMath::Sqrt(2) < 3.0)
-      if (TMath::Hypot( nsigmaTOFK, nsigmaTPCK ) < fNsigma)
-	return true;
-    }
-    else {
-      if (TMath::Abs(nsigmaTPCK) < fNsigma)
-	return true;
-    }
-  }
-
-  else
-  {
-    if(mom < 0.5)
-    {
-      if(TMath::Abs(nsigmaTPCK) < 2.0) {return true;}
-    }
-    
-    else if( (mom > 0.5) && (mom < 1.5) )
-    {
-      if( (nsigmaTOFK < -999) || (TMath::Abs(nsigmaTPCK) >= 3) ) {return false;}
-      else
-      {
-        if( (mom < 0.8) && (TMath::Abs(nsigmaTOFK) < 2.0) ) {return true;}
-        else if( (mom < 1.0) && (TMath::Abs(nsigmaTOFK) < 1.5) ) {return true;}
-        else if( (mom < 1.5) && (TMath::Abs(nsigmaTOFK) < 1.0) ) {return true;}
-      }
-    }
-  }
-  return false;
-
-}
-
-//________________________________________________________________________________________________________________
-bool AliFemtoESDTrackCutNSigmaFilter::IsElectron(float nsigmaTPCE)
-{
-  if(TMath::Abs(nsigmaTPCE) < 3) return true;
-  else return false;
 }
 
 //________________________________________________________________________________________________________________
@@ -102,127 +75,98 @@ bool AliFemtoESDTrackCutNSigmaFilter::Pass(const AliFemtoTrack* track)
   // false if it doesn't meet at least one of the criteria
   float tMost[5];
 
-  //cout<<"AliFemtoESD  cut"<<endl;
-  //cout<<fPidProbPion[0]<<" < pi ="<<track->PidProbPion()<<" <"<<fPidProbPion[1]<<endl;
-  if (fStatus!=0)
-    {
-      //cout<<" status "<<track->Label()<<" "<<track->Flags()<<" "<<track->TPCnclsF()<<" "<<track->ITSncls()<<endl;
-      if ((track->Flags()&fStatus)!=fStatus)
-	{
-	  //	  cout<<track->Flags()<<" "<<fStatus<<" no go through status"<<endl;
-	  return false;
-	}
-
-    }
-  if (fRemoveKinks) {
-    if ((track->KinkIndex(0)) || (track->KinkIndex(1)) || (track->KinkIndex(2)))
-      return false;
+  if (fStatus && (track->Flags() & fStatus) != fStatus) {
+    return false;
   }
-  if (fRemoveITSFake) {
-    if (track->ITSncls() < 0)
-      return false;
+  if (fRemoveKinks && (track->KinkIndex(0) || track->KinkIndex(1) || track->KinkIndex(2))) {
+    return false;
   }
-  if (fminTPCclsF>track->TPCnclsF())
-    {
-      //cout<<" No go because TPC Number of ClsF"<<fminTPCclsF<< " "<<track->TPCnclsF()<<endl;
-      return false;
-    }
-  if (fminTPCncls>track->TPCncls())
-    {
-      //cout<<" No go because TPC Number of ClsF"<<fminTPCclsF<< " "<<track->TPCnclsF()<<endl;
-      return false;
-    }
-  if (fminITScls>track->ITSncls())
-    {
-      //cout<<" No go because ITS Number of Cls"<<fminITScls<< " "<<track->ITSncls()<<endl;
-      return false;
-    }
-
-  if (fMaxImpactXY < TMath::Abs(track->ImpactD()))
+  if (fRemoveITSFake && track->ITSncls() < 0) {
     return false;
-
-  if (fMinImpactXY > TMath::Abs(track->ImpactD()))
+  }
+  if (fminTPCclsF > track->TPCnclsF()) {
     return false;
-
-  if (fMaxImpactZ < TMath::Abs(track->ImpactZ()))
+  }
+  if (fminTPCncls > track->TPCncls()) {
     return false;
+  }
+  if (fminITScls > track->ITSncls()) {
+    return false;
+  }
 
+  if (fMaxImpactXY < TMath::Abs(track->ImpactD())) {
+    return false;
+  }
+  if (fMinImpactXY > TMath::Abs(track->ImpactD())) {
+    return false;
+  }
+  if (fMaxImpactZ < TMath::Abs(track->ImpactZ())) {
+    return false;
+  }
   if (fMaxSigmaToVertex < track->SigmaToVertex()) {
     return false;
   }
 
-  if (track->ITSncls() > 0)
-    if ((track->ITSchi2()/track->ITSncls()) > fMaxITSchiNdof) {
+  if (track->ITSncls() > 0 && (track->ITSchi2() / track->ITSncls()) > fMaxITSchiNdof) {
+    return false;
+  }
+
+  if (track->TPCncls() > 0 && (track->TPCchi2() / track->TPCncls()) > fMaxTPCchiNdof) {
+    return false;
+  }
+
+  // ITS cluster requirenments
+  for (Int_t i = 0; i < 3; i++) {
+    if (!CheckITSClusterRequirement(fCutClusterRequirementITS[i], track->HasPointOnITSLayer(i * 2), track->HasPointOnITSLayer(i*2+1))) {
       return false;
     }
+  }
 
-  if (track->TPCncls() > 0)
-    if ((track->TPCchi2()/track->TPCncls()) > fMaxTPCchiNdof) {
-      return false;
-    }
-  //ITS cluster requirenments
-  for (Int_t i = 0; i < 3; i++)
-    if(!CheckITSClusterRequirement(fCutClusterRequirementITS[i], track->HasPointOnITSLayer(i*2), track->HasPointOnITSLayer(i*2+1)))
-      return false;
-
-  if (fLabel)
-    {
-      //cout<<"labels"<<endl;
-      if(track->Label()<0)
-	{
-	  fNTracksFailed++;
-	  //   cout<<"No Go Through the cut"<<endl;
-	  //  cout<<fLabel<<" Label="<<track->Label()<<endl;
-	  return false;
-	}
-    }
-  if (fCharge!=0)
-    {
-      //cout<<"AliFemtoESD  cut ch "<<endl;
-      //cout<<fCharge<<" Charge="<<track->Charge()<<endl;
-      if (track->Charge()!= fCharge)
-	{
-	  fNTracksFailed++;
-	  //  cout<<"No Go Through the cut"<<endl;
-	  // cout<<fCharge<<" Charge="<<track->Charge()<<endl;
-	  return false;
-	}
-    }
-
-
-
-
-  Bool_t tTPCPidIn = (track->Flags()&AliFemtoTrack::kTPCpid)>0;
-  Bool_t tITSPidIn = (track->Flags()&AliFemtoTrack::kITSpid)>0;
-  Bool_t tTOFPidIn = (track->Flags()&AliFemtoTrack::kTOFpid)>0;
-
-  if(fMinPforTOFpid > 0 && track->P().Mag() > fMinPforTOFpid &&
-     track->P().Mag() < fMaxPforTOFpid && !tTOFPidIn)
-    {
+  if (fLabel) {
+    if (track->Label() < 0) {
       fNTracksFailed++;
       return false;
     }
-
-  if(fMinPforTPCpid > 0 && track->P().Mag() > fMinPforTPCpid &&
-     track->P().Mag() < fMaxPforTPCpid && !tTPCPidIn)
-    {
-      fNTracksFailed++;
-      return false;
-    }
-
-  if(fMinPforITSpid > 0 && track->P().Mag() > fMinPforITSpid &&
-     track->P().Mag() < fMaxPforITSpid && !tITSPidIn)
-    {
-      fNTracksFailed++;
-      return false;
-    }
+  }
+  if (fCharge != 0 && (track->Charge() != fCharge)) {
+    fNTracksFailed++;
+    return false;
+  }
 
 
-  float tEnergy = ::sqrt(track->P().Mag2()+fMass*fMass);
+  Bool_t tTPCPidIn = (track->Flags() & AliFemtoTrack::kTPCpid) > 0;
+  Bool_t tITSPidIn = (track->Flags() & AliFemtoTrack::kITSpid) > 0;
+  Bool_t tTOFPidIn = (track->Flags() & AliFemtoTrack::kTOFpid) > 0;
+
+  const double momentum = track->P().Mag();
+
+  if (fMinPforTOFpid > 0
+      && fMinPforTOFpid < momentum && momentum < fMaxPforTOFpid
+      && !tTOFPidIn) {
+    fNTracksFailed++;
+    return false;
+  }
+
+  if (fMinPforTPCpid > 0
+      && fMinPforTPCpid < momentum && momentum < fMaxPforTPCpid
+      && !tTPCPidIn) {
+    fNTracksFailed++;
+    return false;
+  }
+
+  if (fMinPforITSpid > 0
+      && fMinPforITSpid < momentum && momentum < fMaxPforITSpid
+      && !tITSPidIn) {
+    fNTracksFailed++;
+    return false;
+  }
+
+
+  float tEnergy = ::sqrt(track->P().Mag2() + fMass * fMass);
   float tRapidity = 0;
-  if(tEnergy-track->P().z()!=0 && (tEnergy+track->P().z())/(tEnergy-track->P().z())>0)
-    tRapidity = 0.5*::log((tEnergy+track->P().z())/(tEnergy-track->P().z()));
-  float tPt = ::sqrt((track->P().x())*(track->P().x())+(track->P().y())*(track->P().y()));
+  if (tEnergy-track->P().z() != 0 && (tEnergy + track->P().z()) / (tEnergy-track->P().z()) > 0)
+    tRapidity = 0.5 * ::log((tEnergy + track->P().z())/(tEnergy-track->P().z()));
+  float tPt = track->P().Perp();
   float tEta = track->P().PseudoRapidity();
 
   if (fMaxImpactXYPtOff < 999.0) {
@@ -232,27 +176,18 @@ bool AliFemtoESDTrackCutNSigmaFilter::Pass(const AliFemtoTrack* track)
     }
   }
 
-  if ((tRapidity<fRapidity[0])||(tRapidity>fRapidity[1]))
-    {
-      fNTracksFailed++;
-      //cout<<"No Go Through the cut"<<endl;
-      //cout<<fRapidity[0]<<" < Rapidity ="<<tRapidity<<" <"<<fRapidity[1]<<endl;
-      return false;
-    }
-  if ((tEta<fEta[0])||(tEta>fEta[1]))
-    {
-      fNTracksFailed++;
-      //cout<<"No Go Through the cut"<<endl;
-      //cout<<fEta[0]<<" < Eta ="<<tEta<<" <"<<fEta[1]<<endl;
-      return false;
-    }
-  if ((tPt<fPt[0])||(tPt>fPt[1]))
-    {
-      fNTracksFailed++;
-      //cout<<"No Go Through the cut"<<endl;
-      //cout<<fPt[0]<<" < Pt ="<<Pt<<" <"<<fPt[1]<<endl;
-      return false;
-    }
+  if ((tRapidity < fRapidity[0]) || (tRapidity > fRapidity[1])) {
+    fNTracksFailed++;
+    return false;
+  }
+  if ((tEta < fEta[0]) || (tEta > fEta[1])) {
+    fNTracksFailed++;
+    return false;
+  }
+  if ((tPt < fPt[0]) || (tPt > fPt[1])) {
+    fNTracksFailed++;
+    return false;
+  }
 
 
 
@@ -266,48 +201,44 @@ bool AliFemtoESDTrackCutNSigmaFilter::Pass(const AliFemtoTrack* track)
   //        << track->PidProbElectron()+track->PidProbMuon()+track->PidProbPion()+track->PidProbKaon()+track->PidProbProton() << endl;
 
 
-  if ((track->PidProbElectron()<fPidProbElectron[0])||(track->PidProbElectron()>fPidProbElectron[1]))
-    {
-      fNTracksFailed++;
-      //cout<<"No Go Through the cut"<<endl;
-      //cout<<fPidProbElectron[0]<<" < e ="<<track->PidProbElectron()<<" <"<<fPidProbElectron[1]<<endl;
-      return false;
-    }
-  if ((track->PidProbPion()<fPidProbPion[0])||(track->PidProbPion()>fPidProbPion[1]))
-    {
-      fNTracksFailed++;
-      //cout<<"No Go Through the cut"<<endl;
-      //cout<<fPidProbPion[0]<<" < pi ="<<track->PidProbPion()<<" <"<<fPidProbPion[1]<<endl;
-      return false;
-    }
-  if ((track->PidProbKaon()<fPidProbKaon[0])||(track->PidProbKaon()>fPidProbKaon[1]))
-    {
-      fNTracksFailed++;
-      //cout<<"No Go Through the cut"<<endl;
-      //cout<<fPidProbKaon[0]<<" < k ="<<track->PidProbKaon()<<" <"<<fPidProbKaon[1]<<endl;
-      return false;
-    }
-  if ((track->PidProbProton()<fPidProbProton[0])||(track->PidProbProton()>fPidProbProton[1]))
-    {
-      fNTracksFailed++;
-      //cout<<"No Go Through the cut"<<endl;
-      //cout<<fPidProbProton[0]<<" < p  ="<<track->PidProbProton()<<" <"<<fPidProbProton[1]<<endl;
-      return false;
-    }
-  if ((track->PidProbMuon()<fPidProbMuon[0])||(track->PidProbMuon()>fPidProbMuon[1]))
-    {
-      fNTracksFailed++;
-      //cout<<"No Go Through the cut"<<endl;
-      //cout<<fPidProbMuon[0]<<" <  mi="<<track->PidProbMuon()<<" <"<<fPidProbMuon[1]<<endl;
-      return false;
-    }
+  if ((track->PidProbElectron() < fPidProbElectron[0]) || (track->PidProbElectron() > fPidProbElectron[1])) {
+    fNTracksFailed++;
+    return false;
+  }
+  if ((track->PidProbPion() < fPidProbPion[0]) || (track->PidProbPion() > fPidProbPion[1])) {
+    fNTracksFailed++;
+    return false;
+  }
+  if ((track->PidProbKaon() < fPidProbKaon[0]) || (track->PidProbKaon() > fPidProbKaon[1])) {
+    fNTracksFailed++;
+    return false;
+  }
+  if ((track->PidProbProton() < fPidProbProton[0]) || (track->PidProbProton() > fPidProbProton[1])) {
+    fNTracksFailed++;
+    return false;
+  }
+  if ((track->PidProbMuon() < fPidProbMuon[0]) || (track->PidProbMuon() > fPidProbMuon[1])) {
+    fNTracksFailed++;
+    return false;
+  }
 
-/*
   //****N Sigma Method -- electron rejection****
-  if(fElectronRejection) 
-    if(!IsElectron(track->NSigmaTPCE(),track->NSigmaTPCPi(),track->NSigmaTPCK(), track->NSigmaTPCP())) 
-      return false;
-*/
+  if(fElectronRejection)
+  {
+    if(fUseCustomElectronNSigmaFilter)
+    {
+      if(IsElectronNSigma(track->P().Mag(), track->NSigmaTPCE(), track->NSigmaTOFE()) return false;
+    }
+    else
+    {
+      if(!AliFemtoESDTrackCut::IsElectron(track->NSigmaTPCE(),track->NSigmaTPCPi(),track->NSigmaTPCK(), track->NSigmaTPCP())) return false;
+    }
+  }
+
+  if(fPionRejection)
+  {
+    if(IsPionNSigma(track->P().Mag(), track->NSigmaTPCPi(), track->NSigmaTOFPi())) return false;
+  }
 
   if (fMostProbable) {
 
@@ -501,15 +432,6 @@ bool AliFemtoESDTrackCutNSigmaFilter::Pass(const AliFemtoTrack* track)
     if (imost != fMostProbable) return false;
   }
 
-  if(fElectronRejection)
-  {
-    if(IsElectron(track->NSigmaTPCE())) return false;
-  }
-
-  if(fPionRejection)
-  {
-    if(IsPionNSigma(track->P().Mag(), track->NSigmaTPCPi(), track->NSigmaTOFPi())) return false;
-  }
 
   //fan
   //cout<<"****** Go Through the cut ******"<<endl;
@@ -527,3 +449,170 @@ bool AliFemtoESDTrackCutNSigmaFilter::Pass(const AliFemtoTrack* track)
 
 
 }
+
+void AliFemtoESDTrackCutNSigmaFilter::CreateCustomNSigmaFilter(ParticleType aType)
+{
+  switch (aType) {
+  case kPion:
+    fUseCustomPionNSigmaFilter = true;
+    fPionNSigmaFilter = new AliFemtoNSigmaFilter();
+    break;
+
+  case kKaon:
+    fUseCustomKaonNSigmaFilter = true;
+    fKaonNSigmaFilter = new AliFemtoNSigmaFilter();
+    break;
+
+  case kProton:
+    fUseCustomProtonNSigmaFilter = true;
+    fProtonNSigmaFilter = new AliFemtoNSigmaFilter();
+    break;
+
+  case kElectron:
+    fUseCustomElectronNSigmaFilter = true;
+    fElectronNSigmaFilter = new AliFemtoNSigmaFilter();
+    break;
+
+  default:
+    cerr << "E-AliFemtoESDTrackCutNSigmaFilter::CreateCustomNSigmaFilter: Invalid ParticleType"
+            "selection '" << aType << "'.  No custom filter will be initialized!!!!!" << endl;
+  }
+}
+
+
+void AliFemtoESDTrackCutNSigmaFilter::AddTPCAndTOFNSigmaCut(ParticleType aType, double aMomMin, double aMomMax, double aNSigmaValueTPC, double aNSigmaValueTOF)
+{
+  switch (aType) {
+  case kPion:
+    fPionNSigmaFilter->AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
+    break;
+
+  case kKaon:
+    fKaonNSigmaFilter->AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
+    break;
+
+  case kProton:
+    fProtonNSigmaFilter->AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
+    break;
+
+  case kElectron:
+    fElectronNSigmaFilter->AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
+    break;
+
+  default:
+    cerr << "E-AliFemtoESDTrackCutNSigmaFilter::AddTPCAndTOFNSigmaCut: Invalid ParticleType"
+            "selection '" << aType << "'.  No cut will be initialized!!!!!" << endl;
+  }
+}
+
+void AliFemtoESDTrackCutNSigmaFilter::AddTPCNSigmaCut(ParticleType aType, double aMomMin, double aMomMax, double aNSigmaValueTPC)
+{
+  switch (aType) {
+  case kPion:
+    fPionNSigmaFilter->AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
+    break;
+
+  case kKaon:
+    fKaonNSigmaFilter->AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
+    break;
+
+  case kProton:
+    fProtonNSigmaFilter->AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
+    break;
+
+  case kElectron:
+    fElectronNSigmaFilter->AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
+    break;
+
+  default:
+    cerr << "E-AliFemtoESDTrackCutNSigmaFilter::AddTPCNSigmaCut: Invalid ParticleType"
+            "selection '" << aType << "'.  No cut will be initialized!!!!!" << endl;
+  }
+}
+
+void AliFemtoESDTrackCutNSigmaFilter::AddTOFNSigmaCut(ParticleType aType, double aMomMin, double aMomMax, double aNSigmaValueTOF)
+{
+  switch (aType) {
+  case kPion:
+    fPionNSigmaFilter->AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
+    break;
+
+  case kKaon:
+    fKaonNSigmaFilter->AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
+    break;
+
+  case kProton:
+    fProtonNSigmaFilter->AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
+    break;
+
+  case kElectron:
+    fElectronNSigmaFilter->AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
+    break;
+
+  default:
+    cerr << "E-AliFemtoESDTrackCutNSigmaFilter::AddTOFNSigmaCut: Invalid ParticleType"
+            "selection '" << aType << "'.  No cut will be initialized!!!!!" << endl;
+  }
+}
+
+void AliFemtoESDTrackCutNSigmaFilter::SetOverrideImproperPionNSigmaFilter(ParticleType aType, bool aOverride)
+{
+  switch (aType) {
+  case kPion:
+    fPionNSigmaFilter->SetOverrideImproperConfig(aOverride);
+    break;
+
+  case kKaon:
+    fKaonNSigmaFilter->SetOverrideImproperConfig(aOverride);
+    break;
+
+  case kProton:
+    fProtonNSigmaFilter->SetOverrideImproperConfig(aOverride);
+    break;
+
+  case kElectron:
+    fElectronNSigmaFilter->SetOverrideImproperConfig(aOverride);
+    break;
+
+  default:
+    cerr << "E-AliFemtoESDTrackCutNSigmaFilter::SetOverrideImproperPionNSigmaFilter: Invalid ParticleType"
+            "selection '" << aType << "'.  No override call will be made!!!!!" << endl;
+  }
+}
+
+//________________________________________________________________________________________________________________
+bool AliFemtoESDTrackCutNSigmaFilter::IsKaonNSigma(float mom, float nsigmaTPCK, float nsigmaTOFK)
+{
+  if (fUseCustomKaonNSigmaFilter) {
+    return fKaonNSigmaFilter->Pass(mom, nsigmaTPCK, nsigmaTOFK);
+  } else {
+    return AliFemtoESDTrackCut::IsKaonNSigma(mom, nsigmaTPCK, nsigmaTOFK);
+  }
+}
+
+//________________________________________________________________________________________________________________
+bool AliFemtoESDTrackCutNSigmaFilter::IsPionNSigma(float mom, float nsigmaTPCPi, float nsigmaTOFPi)
+{
+  if (fUseCustomPionNSigmaFilter) {
+    return fPionNSigmaFilter->Pass(mom, nsigmaTPCPi, nsigmaTOFPi);
+  } else {
+    return AliFemtoESDTrackCut::IsPionNSigma(mom, nsigmaTPCPi, nsigmaTOFPi);
+  }
+}
+
+//________________________________________________________________________________________________________________
+bool AliFemtoESDTrackCutNSigmaFilter::IsProtonNSigma(float mom, float nsigmaTPCP, float nsigmaTOFP)
+{
+  if (fUseCustomProtonNSigmaFilter) {
+    return fProtonNSigmaFilter->Pass(mom, nsigmaTPCP, nsigmaTOFP);
+  } else {
+    return AliFemtoESDTrackCut::IsProtonNSigma(mom, nsigmaTPCP, nsigmaTOFP);
+  }
+}
+
+//________________________________________________________________________________________________________________
+bool AliFemtoESDTrackCutNSigmaFilter::IsElectronNSigma(float mom, float nsigmaTPCE, float nsigmaTOFE)
+{
+  return fElectronNSigmaFilter->Pass(mom, nsigmaTPCE, nsigmaTOFE);
+}
+

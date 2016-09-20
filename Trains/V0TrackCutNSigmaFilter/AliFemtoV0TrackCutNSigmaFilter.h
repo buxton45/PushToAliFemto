@@ -15,7 +15,8 @@ class TH1D;
 
 
 /// \class AliFemtoV0TrackCutNSigmaFilter
-/// \brief A class designed to help track cuts test particle calculate NSigma values
+/// \brief A class designed to help track cuts test particle calculated NSigma values
+/// \See AliFemtoNSigmaFilter.h for detailed description of how to use filter
 ///
 /// \author Jesse Buxton <jesse.thomas.buxton@cern.ch>
 ///
@@ -35,7 +36,7 @@ public:
   /// Main method of the filter. Returns true if V0 passes NSigma
   virtual bool Pass(const AliFemtoV0* aV0);
 
-  virtual AliFemtoString Report();
+  virtual AliFemtoString Report();  //TODO
   virtual TList* ListSettings();
   virtual TList* AppendSettings(TList *settings, const TString &prefix = "") const;
 
