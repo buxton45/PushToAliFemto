@@ -59,6 +59,7 @@ public:
                  int aNbinsKStarSide, double aKStarSideMin, double aKStarSideMax,
                  int aNbinsKStarLong, double aKStarLongMin, double aKStarLongMax);
 
+  float CalcMt(const AliFemtoPair* aPair);
 
   //inline functions
   void SetCalculateDetaDphis(Bool_t, Double_t);

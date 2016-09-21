@@ -51,7 +51,7 @@ static const int xi_code = 3312
         ;
 
 const size_t true_type_count = sizeof(true_types) / sizeof(true_types[0]);
-const verySmall = std::numeric_limits < double >::min();
+const double verySmall = std::numeric_limits < double >::min();
 
 //_________________________________________
 AliFemtoModelCorrFctnKStarFull::AliFemtoModelCorrFctnKStarFull() :
@@ -352,7 +352,7 @@ void AliFemtoModelCorrFctnKStarFull::AddMixedPair(AliFemtoPair* aPair)
 
     int tMotherBin1 = GetMotherBin((AliFemtoModelHiddenInfo*)aPair->Track1()->GetHiddenInfo());
     int tMotherBin2 = GetMotherBin((AliFemtoModelHiddenInfo*)aPair->Track2()->GetHiddenInfo());
-    fDenTrueIdealwParentInfo->Fill(tKStarTrue,tMotherBin1,tMotherBin2);
+    fDenIdealwParentInfo->Fill(tKStarTrue,tMotherBin1,tMotherBin2);
   }
 }
 
@@ -454,8 +454,6 @@ double AliFemtoModelCorrFctnKStarFull::CalcKStar(const AliFemtoLorentzVector &p1
 //_________________________________________
 double AliFemtoModelCorrFctnKStarFull::GetKStarTrue(AliFemtoPair* aPair)
 {
-  double verySmall = std::numeric_limits < double >::min();
-
   // Generate a simple femtoscopic weight coming simple Lednicky equation
   // The weight is generated using the TrueMomentum in the HiddenInfo
 

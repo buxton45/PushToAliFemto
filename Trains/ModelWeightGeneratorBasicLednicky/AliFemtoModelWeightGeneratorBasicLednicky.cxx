@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////
 //                                                                                //
-//  AliFemtoModelWeightGeneratorBasicLednicky  .cxx                               //
+//  AliFemtoModelWeightGeneratorBasicLednicky.cxx                                 //
 //                                                                                //
 ////////////////////////////////////////////////////////////////////////////////////
 

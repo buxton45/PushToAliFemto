@@ -170,7 +170,7 @@ AliFemtoCorrFctnKStar::AliFemtoCorrFctnKStar(const AliFemtoCorrFctnKStar& aCorrF
   if(aCorrFctn.fDenDEtaDPhiS) fDenDEtaDPhiS = new TH2D(*aCorrFctn.fDenDEtaDPhiS);
     else fDenDEtaDPhiS = 0;
 
-  if(aCorrFctn.fPairKStar) fPairKStar = new TNtuple(*aCorrFctn.fPairKStar);
+  if(aCorrFctn.fPairKStar) fPairKStar = (TNtuple*)aCorrFctn.fPairKStar->CloneTree();
     else fPairKStar = 0;
 
   if(aCorrFctn.fNumerator_kT) fNumerator_kT = new TH2F(*aCorrFctn.fNumerator_kT);
@@ -240,7 +240,7 @@ AliFemtoCorrFctnKStar& AliFemtoCorrFctnKStar::operator=(const AliFemtoCorrFctnKS
     fDenDEtaDPhiS = new TH2D(*aCorrFctn.fDenDEtaDPhiS);
 
   if(aCorrFctn.fPairKStar) delete fPairKStar;
-    fPairKStar = new TNtuple(*aCorrFctn.fPairKStar);
+    fPairKStar = (TNtuple*)aCorrFctn.fPairKStar->CloneTree();
 
   if(fNumerator_kT) delete fNumerator_kT;
     fNumerator_kT = new TH2F(*aCorrFctn.fNumerator_kT);
@@ -461,4 +461,11 @@ void AliFemtoCorrFctnKStar::Set3dBins(int aNbinsKStarOut,  double aKStarOutMin, 
                         aNbinsKStarLong,aKStarLongMin,aKStarLongMax);
 }
 
-
+//____________________________
+float AliFemtoCorrFctnKStar::CalcMt(const AliFemtoPair* aPair)
+{
+  const double mass_1 = aPair->Track1()->FourMomentum().m(),
+               mass_2 = aPair->Track2()->FourMomentum().m();
+  const double avg_mass = (mass_1 + mass_2) / 2.0;
+  return TMath::Sqrt(avg_mass * avg_mass + ::pow(aPair->KT(), 2));
+}

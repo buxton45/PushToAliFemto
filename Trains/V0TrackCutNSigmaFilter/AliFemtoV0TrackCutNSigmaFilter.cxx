@@ -48,25 +48,22 @@ AliFemtoV0TrackCutNSigmaFilter::~AliFemtoV0TrackCutNSigmaFilter()
   delete fMinvPurityAidHistoV0;
 
 //TODO            TODO           TODO               TODO 
-  if(fK0sRejectionFilters)
+  if(fUseCustomK0sRejectionFilters)
   {
-    delete fK0sRejectionFilters[0];
-    delete fK0sRejectionFilters[1];
-    delete fK0sRejectionFilters;
+    fK0sRejectionFilters.clear();
+    fK0sRejectionFilters.shrink_to_fit();
   } 
 
-  if(fLambdaRejectionFilters)
+  if(fUseCustomLambdaRejectionFilters)
   {
-    delete fLambdaRejectionFilters[0];
-    delete fLambdaRejectionFilters[1];
-    delete fLambdaRejectionFilters;
+    fLambdaRejectionFilters.clear();
+    fLambdaRejectionFilters.shrink_to_fit();
   } 
 
-  if(fAntiLambdaRejectionFilters)
+  if(fUseCustomAntiLambdaRejectionFilters)
   {
-    delete fAntiLambdaRejectionFilters[0];
-    delete fAntiLambdaRejectionFilters[1];
-    delete fAntiLambdaRejectionFilters;
+    fAntiLambdaRejectionFilters.clear();
+    fAntiLambdaRejectionFilters.shrink_to_fit();
   } 
 }
 
@@ -377,22 +374,22 @@ void AliFemtoV0TrackCutNSigmaFilter::AddTPCAndTOFNSigmaCutToV0Rejection(AliFemto
   unsigned int iDaughter = -1;
   if(aDaughterCharge>0) iDaughter=0;
   else if(aDaughterCharge<0) iDaughter=1;
-  else cerr << "E-AliFemtoV0TrackCutNSigmaFilter::AddTPCAndTOFNSigmaCutToV0Rejection: Invalid DaughterCharge"
+  else cerr << "E-AliFemtoV0TrackCutNSigmaFilter::AddTPCAndTOFNSigmaCutToV0Rejection: Invalid DaughterCharge" << endl;
 
   switch (aV0Type) {
   case kK0s:
     fUseCustomK0sRejectionFilters = true;
-    fK0sRejectionFilters[iDaughter]->AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
+    fK0sRejectionFilters[iDaughter].AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
     break;
 
   case kLambda:
     fUseCustomLambdaRejectionFilters = true;
-    fLambdaRejectionFilters[iDaughter]->AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
+    fLambdaRejectionFilters[iDaughter].AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
     break;
 
   case kAntiLambda:
     fUseCustomAntiLambdaRejectionFilters = true;
-    fAntiLambdaRejectionFilters[iDaughter]->AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
+    fAntiLambdaRejectionFilters[iDaughter].AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
     break;
       
   default:
@@ -402,27 +399,27 @@ void AliFemtoV0TrackCutNSigmaFilter::AddTPCAndTOFNSigmaCutToV0Rejection(AliFemto
   }
 }
 
-void AliFemtoV0TrackCutNSigmaFilter::AddTPCAndTOFNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, double aMomMinPos, double aMomMaxPos, double aNSigmaValueTPCPos, double aNSigmaValueTOFPos
+void AliFemtoV0TrackCutNSigmaFilter::AddTPCAndTOFNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, double aMomMinPos, double aMomMaxPos, double aNSigmaValueTPCPos, double aNSigmaValueTOFPos,
                                                                                                 double aMomMinNeg, double aMomMaxNeg, double aNSigmaValueTPCNeg, double aNSigmaValueTOFNeg)
 {
   //TODO
   switch (aV0Type) {
   case kK0s:
     fUseCustomK0sRejectionFilters = true;
-    fK0sRejectionFilters[0]->AddTPCAndTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos,aNSigmaValueTOFPos);
-    fK0sRejectionFilters[1]->AddTPCAndTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg,aNSigmaValueTOFNeg);
+    fK0sRejectionFilters[0].AddTPCAndTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos,aNSigmaValueTOFPos);
+    fK0sRejectionFilters[1].AddTPCAndTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg,aNSigmaValueTOFNeg);
     break;
 
   case kLambda:
     fUseCustomLambdaRejectionFilters = true;
-    fLambdaRejectionFilters[0]->AddTPCAndTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos,aNSigmaValueTOFPos);
-    fLambdaRejectionFilters[1]->AddTPCAndTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg,aNSigmaValueTOFNeg);
+    fLambdaRejectionFilters[0].AddTPCAndTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos,aNSigmaValueTOFPos);
+    fLambdaRejectionFilters[1].AddTPCAndTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg,aNSigmaValueTOFNeg);
     break;
 
   case kAntiLambda:
     fUseCustomAntiLambdaRejectionFilters = true;
-    fAntiLambdaRejectionFilters[0]->AddTPCAndTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos,aNSigmaValueTOFPos);
-    fAntiLambdaRejectionFilters[1]->AddTPCAndTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg,aNSigmaValueTOFNeg);
+    fAntiLambdaRejectionFilters[0].AddTPCAndTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos,aNSigmaValueTOFPos);
+    fAntiLambdaRejectionFilters[1].AddTPCAndTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg,aNSigmaValueTOFNeg);
     break;
       
   default:
@@ -439,22 +436,22 @@ void AliFemtoV0TrackCutNSigmaFilter::AddTPCNSigmaCutToV0Rejection(AliFemtoV0Type
   unsigned int iDaughter = -1;
   if(aDaughterCharge>0) iDaughter=0;
   else if(aDaughterCharge<0) iDaughter=1;
-  else cerr << "E-AliFemtoV0TrackCutNSigmaFilter::AddTPCNSigmaCutToV0Rejection: Invalid DaughterCharge"
+  else cerr << "E-AliFemtoV0TrackCutNSigmaFilter::AddTPCNSigmaCutToV0Rejection: Invalid DaughterCharge" << endl;
 
   switch (aV0Type) {
   case kK0s:
     fUseCustomK0sRejectionFilters = true;
-    fK0sRejectionFilters[iDaughter]->AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
+    fK0sRejectionFilters[iDaughter].AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
     break;
 
   case kLambda:
     fUseCustomLambdaRejectionFilters = true;
-    fLambdaRejectionFilters[iDaughter]->AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
+    fLambdaRejectionFilters[iDaughter].AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
     break;
 
   case kAntiLambda:
     fUseCustomAntiLambdaRejectionFilters = true;
-    fAntiLambdaRejectionFilters[iDaughter]->AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
+    fAntiLambdaRejectionFilters[iDaughter].AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
     break;
       
   default:
@@ -470,20 +467,20 @@ void AliFemtoV0TrackCutNSigmaFilter::AddTPCNSigmaCutToV0Rejection(AliFemtoV0Type
   switch (aV0Type) {
   case kK0s:
     fUseCustomK0sRejectionFilters = true;
-    fK0sRejectionFilters[0]->AddTPCCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos);
-    fK0sRejectionFilters[1]->AddTPCCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg);
+    fK0sRejectionFilters[0].AddTPCCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos);
+    fK0sRejectionFilters[1].AddTPCCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg);
     break;
 
   case kLambda:
     fUseCustomLambdaRejectionFilters = true;
-    fLambdaRejectionFilters[0]->AddTPCCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos);
-    fLambdaRejectionFilters[1]->AddTPCCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg);
+    fLambdaRejectionFilters[0].AddTPCCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos);
+    fLambdaRejectionFilters[1].AddTPCCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg);
     break;
 
   case kAntiLambda:
     fUseCustomAntiLambdaRejectionFilters = true;
-    fAntiLambdaRejectionFilters[0]->AddTPCCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos);
-    fAntiLambdaRejectionFilters[1]->AddTPCCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg);
+    fAntiLambdaRejectionFilters[0].AddTPCCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos);
+    fAntiLambdaRejectionFilters[1].AddTPCCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg);
     break;
       
   default:
@@ -500,22 +497,22 @@ void AliFemtoV0TrackCutNSigmaFilter::AddTOFNSigmaCutToV0Rejection(AliFemtoV0Type
   unsigned int iDaughter = -1;
   if(aDaughterCharge>0) iDaughter=0;
   else if(aDaughterCharge<0) iDaughter=1;
-  else cerr << "E-AliFemtoV0TrackCutNSigmaFilter::AddTOFNSigmaCutToV0Rejection: Invalid DaughterCharge"
+  else cerr << "E-AliFemtoV0TrackCutNSigmaFilter::AddTOFNSigmaCutToV0Rejection: Invalid DaughterCharge" << endl;
 
   switch (aV0Type) {
   case kK0s:
     fUseCustomK0sRejectionFilters = true;
-    fK0sRejectionFilters[iDaughter]->AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
+    fK0sRejectionFilters[iDaughter].AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
     break;
 
   case kLambda:
     fUseCustomLambdaRejectionFilters = true;
-    fLambdaRejectionFilters[iDaughter]->AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
+    fLambdaRejectionFilters[iDaughter].AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
     break;
 
   case kAntiLambda:
     fUseCustomAntiLambdaRejectionFilters = true;
-    fAntiLambdaRejectionFilters[iDaughter]->AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
+    fAntiLambdaRejectionFilters[iDaughter].AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
     break;
       
   default:
@@ -525,26 +522,26 @@ void AliFemtoV0TrackCutNSigmaFilter::AddTOFNSigmaCutToV0Rejection(AliFemtoV0Type
   }
 }
 
-void AliFemtoV0TrackCutNSigmaFilter::AddTOFNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, double aMomMinPos, double aMomMaxPos, double aNSigmaValueTOFPos
+void AliFemtoV0TrackCutNSigmaFilter::AddTOFNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, double aMomMinPos, double aMomMaxPos, double aNSigmaValueTOFPos,
                                                                                           double aMomMinNeg, double aMomMaxNeg, double aNSigmaValueTOFNeg)
 {
   switch (aV0Type) {
   case kK0s:
     fUseCustomK0sRejectionFilters = true;
-    fK0sRejectionFilters[0]->AddTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTOFPos);
-    fK0sRejectionFilters[1]->AddTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTOFNeg);
+    fK0sRejectionFilters[0].AddTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTOFPos);
+    fK0sRejectionFilters[1].AddTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTOFNeg);
     break;
 
   case kLambda:
     fUseCustomLambdaRejectionFilters = true;
-    fLambdaRejectionFilters[0]->AddTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTOFPos);
-    fLambdaRejectionFilters[1]->AddTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTOFNeg);
+    fLambdaRejectionFilters[0].AddTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTOFPos);
+    fLambdaRejectionFilters[1].AddTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTOFNeg);
     break;
 
   case kAntiLambda:
     fUseCustomAntiLambdaRejectionFilters = true;
-    fAntiLambdaRejectionFilters[0]->AddTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTOFPos);
-    fAntiLambdaRejectionFilters[1]->AddTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTOFNeg);
+    fAntiLambdaRejectionFilters[0].AddTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTOFPos);
+    fAntiLambdaRejectionFilters[1].AddTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTOFNeg);
     break;
       
   default:
@@ -562,9 +559,9 @@ bool AliFemtoV0TrackCutNSigmaFilter::IsMisIDK0s(const AliFemtoV0* aV0)
   {
     if(aV0->MassK0Short()>fInvMassRejectK0sMin && aV0->MassK0Short()<fInvMassRejectK0sMax)
     {
-      if(fK0sRejectionFilters[0]->Pass(aV0->PtPos(), aV0->PosNSigmaTPCPi(), aV0->PosNSigmaTOFPi()))
+      if(fK0sRejectionFilters[0].Pass(aV0->PtPos(), aV0->PosNSigmaTPCPi(), aV0->PosNSigmaTOFPi()))
       {
-        if(fK0sRejectionFilters[1]->Pass(aV0->PtNeg(), aV0->NegNSigmaTPCPi(), aV0->NegNSigmaTOFPi()))
+        if(fK0sRejectionFilters[1].Pass(aV0->PtNeg(), aV0->NegNSigmaTPCPi(), aV0->NegNSigmaTOFPi()))
         {
           return true;
         }
@@ -580,12 +577,12 @@ bool AliFemtoV0TrackCutNSigmaFilter::IsMisIDK0s(const AliFemtoV0* aV0)
 */
 bool AliFemtoV0TrackCutNSigmaFilter::IsMisIDK0s(const AliFemtoV0* aV0)
 {
-  //TODO
+  //TODO test vs above commented out
   if(fUseCustomK0sRejectionFilters)
   {
     if(aV0->MassK0Short()<fInvMassRejectK0sMin || aV0->MassK0Short()>fInvMassRejectK0sMax) return false;
-    if(!fK0sRejectionFilters[0]->Pass(aV0->PtPos(), aV0->PosNSigmaTPCPi(), aV0->PosNSigmaTOFPi())) return false;
-    if(!fK0sRejectionFilters[1]->Pass(aV0->PtNeg(), aV0->NegNSigmaTPCPi(), aV0->NegNSigmaTOFPi())) return false;
+    if(!fK0sRejectionFilters[0].Pass(aV0->PtPos(), aV0->PosNSigmaTPCPi(), aV0->PosNSigmaTOFPi())) return false;
+    if(!fK0sRejectionFilters[1].Pass(aV0->PtNeg(), aV0->NegNSigmaTPCPi(), aV0->NegNSigmaTOFPi())) return false;
     return true;
   }
   else return AliFemtoV0TrackCut::IsMisIDK0s(aV0);
@@ -593,24 +590,22 @@ bool AliFemtoV0TrackCutNSigmaFilter::IsMisIDK0s(const AliFemtoV0* aV0)
 
 bool AliFemtoV0TrackCutNSigmaFilter::IsMisIDLambda(const AliFemtoV0* aV0)
 {
-  //TODO
   if(fUseCustomLambdaRejectionFilters)
   {
     if(aV0->MassLambda()<fInvMassRejectLambdaMin || aV0->MassLambda()>fInvMassRejectLambdaMax) return false;
-    if(!fLambdaRejectionFilters[0]->Pass(aV0->PtPos(), aV0->PosNSigmaTPCP(), aV0->PosNSigmaTOFP())) return false;
-    if(!fLambdaRejectionFilters[1]->Pass(aV0->PtNeg(), aV0->NegNSigmaTPCPi(), aV0->NegNSigmaTOFPi())) return false;
+    if(!fLambdaRejectionFilters[0].Pass(aV0->PtPos(), aV0->PosNSigmaTPCP(), aV0->PosNSigmaTOFP())) return false;
+    if(!fLambdaRejectionFilters[1].Pass(aV0->PtNeg(), aV0->NegNSigmaTPCPi(), aV0->NegNSigmaTOFPi())) return false;
     return true;
   }
   else return AliFemtoV0TrackCut::IsMisIDLambda(aV0);
 }
 bool AliFemtoV0TrackCutNSigmaFilter::IsMisIDAntiLambda(const AliFemtoV0* aV0)
 {
-  //TODO
   if(fUseCustomAntiLambdaRejectionFilters)
   {
     if(aV0->MassAntiLambda()<fInvMassRejectAntiLambdaMin && aV0->MassAntiLambda()>fInvMassRejectAntiLambdaMax) return false;
-    if(!fAntiLambdaRejectionFilters[0]->Pass(aV0->PtPos(), aV0->PosNSigmaTPCPi(), aV0->PosNSigmaTOFPi())) return false;
-    if(!fAntiLambdaRejectionFilters[1]->Pass(aV0->PtNeg(), aV0->NegNSigmaTPCP(), aV0->NegNSigmaTOFP())) return false;
+    if(!fAntiLambdaRejectionFilters[0].Pass(aV0->PtPos(), aV0->PosNSigmaTPCPi(), aV0->PosNSigmaTOFPi())) return false;
+    if(!fAntiLambdaRejectionFilters[1].Pass(aV0->PtNeg(), aV0->NegNSigmaTPCP(), aV0->NegNSigmaTOFP())) return false;
     return true;
   }
   else return AliFemtoV0TrackCut::IsMisIDAntiLambda(aV0);

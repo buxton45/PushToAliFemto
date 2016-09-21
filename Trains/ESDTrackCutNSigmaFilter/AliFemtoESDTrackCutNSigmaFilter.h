@@ -25,9 +25,9 @@ public:
 
   virtual bool Pass(const AliFemtoTrack* aTrack);
 
-  virtual AliFemtoString Report();  //TODO
-  virtual TList* ListSettings();  //TODO
-  virtual TList* AppendSettings(TList *settings, const TString &prefix = "") const;  //TODO
+//  virtual AliFemtoString Report();  //TODO
+//  virtual TList* ListSettings();  //TODO
+//  virtual TList* AppendSettings(TList *settings, const TString &prefix = "") const;  //TODO
 
 
 

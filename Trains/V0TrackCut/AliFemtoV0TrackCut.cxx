@@ -129,9 +129,9 @@ AliFemtoV0TrackCut::AliFemtoV0TrackCut(const AliFemtoV0TrackCut& aCut) :
 
   fBuildPurityAidV0(aCut.fBuildPurityAidV0),
 
-  fUseLooseInvMassCut = cut.fUseLooseInvMassCut;
-  fLooseInvMassMin = cut.fLooseInvMassMin;
-  fLooseInvMassMax = cut.fLooseInvMassMax;
+  fUseLooseInvMassCut(aCut.fUseLooseInvMassCut),
+  fLooseInvMassMin(aCut.fLooseInvMassMin),
+  fLooseInvMassMax(aCut.fLooseInvMassMax),
 
   fRemoveMisidentified(aCut.fRemoveMisidentified),
   fUseSimpleMisIDCut(aCut.fUseSimpleMisIDCut),
@@ -200,9 +200,9 @@ AliFemtoV0TrackCut& AliFemtoV0TrackCut::operator=(const AliFemtoV0TrackCut& aCut
 
   fBuildPurityAidV0 = aCut.fBuildPurityAidV0;
 
-  fUseLooseInvMassCut = cut.fUseLooseInvMassCut;
-  fLooseInvMassMin = cut.fLooseInvMassMin;
-  fLooseInvMassMax = cut.fLooseInvMassMax;
+  fUseLooseInvMassCut = aCut.fUseLooseInvMassCut;
+  fLooseInvMassMin = aCut.fLooseInvMassMin;
+  fLooseInvMassMax = aCut.fLooseInvMassMax;
 
   fRadiusV0Min = aCut.fRadiusV0Min;
   fRadiusV0Max = aCut.fRadiusV0Max;
@@ -937,7 +937,7 @@ TList *AliFemtoV0TrackCut::GetOutputList()
   TList *tOutputList = AliFemtoCutMonitorHandler::GetOutputList();  //add all of the typical objects
 
   if(fBuildPurityAidV0) tOutputList->Add(fMinvPurityAidHistoV0);
-  if(fBuildMisIDHistograms) tOutputList->Add(GetMisIDHistos);
+  if(fBuildMisIDHistograms) tOutputList->Add(GetMisIDHistos());
 
   return tOutputList;
 }

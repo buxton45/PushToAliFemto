@@ -50,11 +50,11 @@ public:
   void SetMinDaughtersToPrimVertex(double,double);
   void SetMaxDcaV0Daughters(double);
   void SetMaxDcaV0(double);
-  void SetMinDcaV0(double);  //TODO
+  void SetMinDcaV0(double);
   void SetMaxCosPointingAngle(double);
-  void SetMinCosPointingAngle(double);  //TODO
+  void SetMinCosPointingAngle(double);
   void SetMaxV0DecayLength(double);
-  void SetMinTransverseDistancePrimSecVtx(double);  //TODO
+  void SetMinTransverseDistancePrimSecVtx(double);
   void SetParticleType(short);
   void SetEta(double);
   void SetPt(double,double);
@@ -67,24 +67,24 @@ public:
   void SetOnFlyStatus(bool);
   void SetMinAvgSeparation(double);
 
-  void SetRadiusV0Min(double);  //TODO
-  void SetRadiusV0Max(double);  //TODO
+  void SetRadiusV0Min(double);
+  void SetRadiusV0Max(double);
 
-  void SetRequireTOFPion(bool);  //TODO
-  void SetRequireTOFProton(bool); //TODO
+  void SetRequireTOFPion(bool);
+  void SetRequireTOFProton(bool);
   
-  void SetNsigmaPosDaughter(double);  //TODO
-  void SetNsigmaNegDaughter(double);  //TODO
-  void SetNsigmaPosDaughter(double,double);  //TODO
-  void SetNsigmaNegDaughter(double,double);  //TODO
+  void SetNsigmaPosDaughter(double);
+  void SetNsigmaNegDaughter(double);
+  void SetNsigmaPosDaughter(double,double);
+  void SetNsigmaNegDaughter(double,double);
   
 
   //----n sigma----
   bool IsKaonTPCdEdxNSigma(float mom, float nsigmaK);
   bool IsKaonTOFNSigma(float mom, float nsigmaK);
   bool IsKaonNSigma(float mom, float nsigmaTPCK, float nsigmaTOFK);
-  bool IsPionNSigma(float mom, float nsigmaTPCP, float nsigmaTOFP, double nsigmacutTPC=3.0, double nsigmacutTOF=3.0, bool requireTOF=false);  //TODO
-  bool IsProtonNSigma(float mom, float nsigmaTPCP, float nsigmaTOFP, double nsigmacutTPC=3.0, double nsigmacutTOF=3.0, bool requireTOF=true);  //TODO
+  bool IsPionNSigma(float mom, float nsigmaTPCP, float nsigmaTOFP, double nsigmacutTPC=3.0, double nsigmacutTOF=3.0, bool requireTOF=false);
+  bool IsProtonNSigma(float mom, float nsigmaTPCP, float nsigmaTOFP, double nsigmacutTPC=3.0, double nsigmacutTOF=3.0, bool requireTOF=true);
 
   //-----The fMinvPurityAidHistoV0 is built immediately before the (final) invariant mass cut, and thus may be used to calculate the purity of the V0 collection
   void SetMinvPurityAidHistoV0(const char* name, const char* title, const int& nbins, const float& aInvMassMin, const float& aInvMassMax);  //set the Minv histogram attributes and 
@@ -97,7 +97,7 @@ public:
   void SetRemoveMisidentified(bool aRemove);
   void SetUseSimpleMisIDCut(bool aUse);
 
-  void SetInvariantMassRejectK0s(double,double);  //TODO // invariant mass window in which to reject misidentified K0s from (Anti)Lambda
+  void SetInvariantMassRejectK0s(double,double);         // invariant mass window in which to reject misidentified K0s from (Anti)Lambda
   void SetInvariantMassRejectLambda(double,double);      // invariant mass window in which to reject misidentified Lambda from K0s
   void SetInvariantMassRejectAntiLambda(double,double);  // invariant mass window in which to reject misidentified AntiLambda from K0s
   void SetInvMassReject(AliFemtoV0Type aV0Type, double aInvMassMin, double aInvMassMax);  //aV0Type selects one of the above setters

@@ -77,18 +77,16 @@ public:
   void SetOverrideImproperProtonNSigmaFilter(bool aOverride);
 
   // Methods to help cut out misidentified V0s
-  //TODO
   void AddTPCAndTOFNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, int aDaughterCharge, double aMomMin, double aMomMax, double aNSigmaValueTPC, double aNSigmaValueTOF);
-  void AddTPCAndTOFNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, double aMomMinPos, double aMomMaxPos, double aNSigmaValueTPCPos, double aNSigmaValueTOFPos
+  void AddTPCAndTOFNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, double aMomMinPos, double aMomMaxPos, double aNSigmaValueTPCPos, double aNSigmaValueTOFPos,
                                                                   double aMomMinNeg, double aMomMaxNeg, double aNSigmaValueTPCNeg, double aNSigmaValueTOFNeg);
   void AddTPCNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, int aDaughterCharge, double aMomMin, double aMomMax, double aNSigmaValueTPC);
   void AddTPCNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, double aMomMinPos, double aMomMaxPos, double aNSigmaValueTPCPos,
                                                             double aMomMinNeg, double aMomMaxNeg, double aNSigmaValueTPCNeg);
   void AddTOFNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, int aDaughterCharge, double aMomMin, double aMomMax, double aNSigmaValueTOF);
-  void AddTOFNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, double aMomMinPos, double aMomMaxPos, double aNSigmaValueTOFPos
+  void AddTOFNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, double aMomMinPos, double aMomMaxPos, double aNSigmaValueTOFPos,
                                                             double aMomMinNeg, double aMomMaxNeg, double aNSigmaValueTOFNeg);
 
-  //TODO
   bool IsMisIDK0s(const AliFemtoV0* aV0);
   bool IsMisIDLambda(const AliFemtoV0* aV0);
   bool IsMisIDAntiLambda(const AliFemtoV0* aV0);
@@ -104,7 +102,6 @@ protected:
   AliFemtoNSigmaFilter *fProtonNSigmaFilter;
 
   // Members to help cut out misidentified V0s
-  //TODO
   bool fUseCustomK0sRejectionFilters;
   bool fUseCustomLambdaRejectionFilters;
   bool fUseCustomAntiLambdaRejectionFilters;

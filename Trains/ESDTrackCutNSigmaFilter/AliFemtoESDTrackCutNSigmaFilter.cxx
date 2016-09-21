@@ -227,7 +227,7 @@ bool AliFemtoESDTrackCutNSigmaFilter::Pass(const AliFemtoTrack* track)
   {
     if(fUseCustomElectronNSigmaFilter)
     {
-      if(IsElectronNSigma(track->P().Mag(), track->NSigmaTPCE(), track->NSigmaTOFE()) return false;
+      if(IsElectronNSigma(track->P().Mag(), track->NSigmaTPCE(), track->NSigmaTOFE())) return false;
     }
     else
     {
