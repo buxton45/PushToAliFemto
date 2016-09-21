@@ -111,7 +111,7 @@ public:
   bool IsMisIDLambda(const AliFemtoV0* aV0);
   bool IsMisIDAntiLambda(const AliFemtoV0* aV0);
 
-  virtual TList *GetOutputList();  //include fMinvPurityAidHistoV0 in the output list 
+  virtual TList *GetOutputList();  //include fMinvPurityAidHistoV0 and fK0sMassOfMisIDV0 etc. in the output list 
 
  protected:   // here are the quantities I want to cut on...
 

@@ -340,6 +340,7 @@ void AliFemtoV0TrackCutNSigmaFilter::CreateCustomNSigmaFilter(DaughterParticleTy
   default:
     cerr << "E-AliFemtoV0TrackCutNSigmaFilter::CreateCustomNSigmaFilter: Invalid DaughterParticleType"
             "selection '" << aDaughterType << "'.  No custom filter will be initialized!!!!!" << endl;
+    break;
   }
 }
 
@@ -378,24 +379,26 @@ void AliFemtoV0TrackCutNSigmaFilter::AddTPCAndTOFNSigmaCutToV0Rejection(AliFemto
   else if(aDaughterCharge<0) iDaughter=1;
   else cerr << "E-AliFemtoV0TrackCutNSigmaFilter::AddTPCAndTOFNSigmaCutToV0Rejection: Invalid DaughterCharge"
 
-  switch (aV0Type)
-  {
-    case kK0s:
-      fUseCustomK0sRejectionFilters = true;
-      fK0sRejectionFilters[iDaughter]->AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
-      break;
+  switch (aV0Type) {
+  case kK0s:
+    fUseCustomK0sRejectionFilters = true;
+    fK0sRejectionFilters[iDaughter]->AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
+    break;
 
-    case kLambda:
-      fUseCustomLambdaRejectionFilters = true;
-      fLambdaRejectionFilters[iDaughter]->AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
+  case kLambda:
+    fUseCustomLambdaRejectionFilters = true;
+    fLambdaRejectionFilters[iDaughter]->AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
+    break;
 
-    case kAntiLambda:
-      fUseCustomAntiLambdaRejectionFilters = true;
-      fAntiLambdaRejectionFilters[iDaughter]->AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
+  case kAntiLambda:
+    fUseCustomAntiLambdaRejectionFilters = true;
+    fAntiLambdaRejectionFilters[iDaughter]->AddTPCAndTOFCut(aMomMin,aMomMax,aNSigmaValueTPC,aNSigmaValueTOF);
+    break;
       
   default:
     cerr << "E-AliFemtoV0TrackCutNSigmaFilter::AddTPCAndTOFNSigmaCutToV0Rejection: Invalid V0Type"
             "selection '" << aV0Type << "'.  No cut will be initialized!!!!!" << endl;
+    break;
   }
 }
 
@@ -403,27 +406,29 @@ void AliFemtoV0TrackCutNSigmaFilter::AddTPCAndTOFNSigmaCutToV0Rejection(AliFemto
                                                                                                 double aMomMinNeg, double aMomMaxNeg, double aNSigmaValueTPCNeg, double aNSigmaValueTOFNeg)
 {
   //TODO
-  switch (aV0Type)
-  {
-    case kK0s:
-      fUseCustomK0sRejectionFilters = true;
-      fK0sRejectionFilters[0]->AddTPCAndTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos,aNSigmaValueTOFPos);
-      fK0sRejectionFilters[1]->AddTPCAndTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg,aNSigmaValueTOFNeg);
-      break;
+  switch (aV0Type) {
+  case kK0s:
+    fUseCustomK0sRejectionFilters = true;
+    fK0sRejectionFilters[0]->AddTPCAndTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos,aNSigmaValueTOFPos);
+    fK0sRejectionFilters[1]->AddTPCAndTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg,aNSigmaValueTOFNeg);
+    break;
 
-    case kLambda:
-      fUseCustomLambdaRejectionFilters = true;
-      fLambdaRejectionFilters[0]->AddTPCAndTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos,aNSigmaValueTOFPos);
-      fLambdaRejectionFilters[1]->AddTPCAndTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg,aNSigmaValueTOFNeg);
+  case kLambda:
+    fUseCustomLambdaRejectionFilters = true;
+    fLambdaRejectionFilters[0]->AddTPCAndTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos,aNSigmaValueTOFPos);
+    fLambdaRejectionFilters[1]->AddTPCAndTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg,aNSigmaValueTOFNeg);
+    break;
 
-    case kAntiLambda:
-      fUseCustomAntiLambdaRejectionFilters = true;
-      fAntiLambdaRejectionFilters[0]->AddTPCAndTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos,aNSigmaValueTOFPos);
-      fAntiLambdaRejectionFilters[1]->AddTPCAndTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg,aNSigmaValueTOFNeg);
+  case kAntiLambda:
+    fUseCustomAntiLambdaRejectionFilters = true;
+    fAntiLambdaRejectionFilters[0]->AddTPCAndTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos,aNSigmaValueTOFPos);
+    fAntiLambdaRejectionFilters[1]->AddTPCAndTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg,aNSigmaValueTOFNeg);
+    break;
       
   default:
     cerr << "E-AliFemtoV0TrackCutNSigmaFilter::AddTPCAndTOFNSigmaCutToV0Rejection: Invalid V0Type"
             "selection '" << aV0Type << "'.  No cut will be initialized!!!!!" << endl;
+    break;
   }
 }
 
@@ -436,51 +441,55 @@ void AliFemtoV0TrackCutNSigmaFilter::AddTPCNSigmaCutToV0Rejection(AliFemtoV0Type
   else if(aDaughterCharge<0) iDaughter=1;
   else cerr << "E-AliFemtoV0TrackCutNSigmaFilter::AddTPCNSigmaCutToV0Rejection: Invalid DaughterCharge"
 
-  switch (aV0Type)
-  {
-    case kK0s:
-      fUseCustomK0sRejectionFilters = true;
-      fK0sRejectionFilters[iDaughter]->AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
-      break;
+  switch (aV0Type) {
+  case kK0s:
+    fUseCustomK0sRejectionFilters = true;
+    fK0sRejectionFilters[iDaughter]->AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
+    break;
 
-    case kLambda:
-      fUseCustomLambdaRejectionFilters = true;
-      fLambdaRejectionFilters[iDaughter]->AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
+  case kLambda:
+    fUseCustomLambdaRejectionFilters = true;
+    fLambdaRejectionFilters[iDaughter]->AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
+    break;
 
-    case kAntiLambda:
-      fUseCustomAntiLambdaRejectionFilters = true;
-      fAntiLambdaRejectionFilters[iDaughter]->AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
+  case kAntiLambda:
+    fUseCustomAntiLambdaRejectionFilters = true;
+    fAntiLambdaRejectionFilters[iDaughter]->AddTPCCut(aMomMin,aMomMax,aNSigmaValueTPC);
+    break;
       
   default:
     cerr << "E-AliFemtoV0TrackCutNSigmaFilter::AddTPCNSigmaCutToV0Rejection: Invalid V0Type"
             "selection '" << aV0Type << "'.  No cut will be initialized!!!!!" << endl;
+    break;
   }
 }
 
 void AliFemtoV0TrackCutNSigmaFilter::AddTPCNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, double aMomMinPos, double aMomMaxPos, double aNSigmaValueTPCPos,
                                                                                           double aMomMinNeg, double aMomMaxNeg, double aNSigmaValueTPCNeg)
 {
-  switch (aV0Type)
-  {
-    case kK0s:
-      fUseCustomK0sRejectionFilters = true;
-      fK0sRejectionFilters[0]->AddTPCCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos);
-      fK0sRejectionFilters[1]->AddTPCCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg);
-      break;
+  switch (aV0Type) {
+  case kK0s:
+    fUseCustomK0sRejectionFilters = true;
+    fK0sRejectionFilters[0]->AddTPCCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos);
+    fK0sRejectionFilters[1]->AddTPCCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg);
+    break;
 
-    case kLambda:
-      fUseCustomLambdaRejectionFilters = true;
-      fLambdaRejectionFilters[0]->AddTPCCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos);
-      fLambdaRejectionFilters[1]->AddTPCCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg);
+  case kLambda:
+    fUseCustomLambdaRejectionFilters = true;
+    fLambdaRejectionFilters[0]->AddTPCCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos);
+    fLambdaRejectionFilters[1]->AddTPCCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg);
+    break;
 
-    case kAntiLambda:
-      fUseCustomAntiLambdaRejectionFilters = true;
-      fAntiLambdaRejectionFilters[0]->AddTPCCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos);
-      fAntiLambdaRejectionFilters[1]->AddTPCCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg);
+  case kAntiLambda:
+    fUseCustomAntiLambdaRejectionFilters = true;
+    fAntiLambdaRejectionFilters[0]->AddTPCCut(aMomMinPos,aMomMaxPos,aNSigmaValueTPCPos);
+    fAntiLambdaRejectionFilters[1]->AddTPCCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTPCNeg);
+    break;
       
   default:
     cerr << "E-AliFemtoV0TrackCutNSigmaFilter::AddTPCNSigmaCutToV0Rejection: Invalid V0Type"
             "selection '" << aV0Type << "'.  No cut will be initialized!!!!!" << endl;
+    break;
   }
 }
 
@@ -493,51 +502,55 @@ void AliFemtoV0TrackCutNSigmaFilter::AddTOFNSigmaCutToV0Rejection(AliFemtoV0Type
   else if(aDaughterCharge<0) iDaughter=1;
   else cerr << "E-AliFemtoV0TrackCutNSigmaFilter::AddTOFNSigmaCutToV0Rejection: Invalid DaughterCharge"
 
-  switch (aV0Type)
-  {
-    case kK0s:
-      fUseCustomK0sRejectionFilters = true;
-      fK0sRejectionFilters[iDaughter]->AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
-      break;
+  switch (aV0Type) {
+  case kK0s:
+    fUseCustomK0sRejectionFilters = true;
+    fK0sRejectionFilters[iDaughter]->AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
+    break;
 
-    case kLambda:
-      fUseCustomLambdaRejectionFilters = true;
-      fLambdaRejectionFilters[iDaughter]->AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
+  case kLambda:
+    fUseCustomLambdaRejectionFilters = true;
+    fLambdaRejectionFilters[iDaughter]->AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
+    break;
 
-    case kAntiLambda:
-      fUseCustomAntiLambdaRejectionFilters = true;
-      fAntiLambdaRejectionFilters[iDaughter]->AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
+  case kAntiLambda:
+    fUseCustomAntiLambdaRejectionFilters = true;
+    fAntiLambdaRejectionFilters[iDaughter]->AddTOFCut(aMomMin,aMomMax,aNSigmaValueTOF);
+    break;
       
   default:
     cerr << "E-AliFemtoV0TrackCutNSigmaFilter::AddTOFNSigmaCutToV0Rejection: Invalid V0Type"
             "selection '" << aV0Type << "'.  No cut will be initialized!!!!!" << endl;
+    break;
   }
 }
 
 void AliFemtoV0TrackCutNSigmaFilter::AddTOFNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, double aMomMinPos, double aMomMaxPos, double aNSigmaValueTOFPos
                                                                                           double aMomMinNeg, double aMomMaxNeg, double aNSigmaValueTOFNeg)
 {
-  switch (aV0Type)
-  {
-    case kK0s:
-      fUseCustomK0sRejectionFilters = true;
-      fK0sRejectionFilters[0]->AddTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTOFPos);
-      fK0sRejectionFilters[1]->AddTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTOFNeg);
-      break;
+  switch (aV0Type) {
+  case kK0s:
+    fUseCustomK0sRejectionFilters = true;
+    fK0sRejectionFilters[0]->AddTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTOFPos);
+    fK0sRejectionFilters[1]->AddTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTOFNeg);
+    break;
 
-    case kLambda:
-      fUseCustomLambdaRejectionFilters = true;
-      fLambdaRejectionFilters[0]->AddTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTOFPos);
-      fLambdaRejectionFilters[1]->AddTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTOFNeg);
+  case kLambda:
+    fUseCustomLambdaRejectionFilters = true;
+    fLambdaRejectionFilters[0]->AddTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTOFPos);
+    fLambdaRejectionFilters[1]->AddTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTOFNeg);
+    break;
 
-    case kAntiLambda:
-      fUseCustomAntiLambdaRejectionFilters = true;
-      fAntiLambdaRejectionFilters[0]->AddTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTOFPos);
-      fAntiLambdaRejectionFilters[1]->AddTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTOFNeg);
+  case kAntiLambda:
+    fUseCustomAntiLambdaRejectionFilters = true;
+    fAntiLambdaRejectionFilters[0]->AddTOFCut(aMomMinPos,aMomMaxPos,aNSigmaValueTOFPos);
+    fAntiLambdaRejectionFilters[1]->AddTOFCut(aMomMinNeg,aMomMaxNeg,aNSigmaValueTOFNeg);
+    break;
       
   default:
     cerr << "E-AliFemtoV0TrackCutNSigmaFilter::AddTOFNSigmaCutToV0Rejection: Invalid V0Type"
             "selection '" << aV0Type << "'.  No cut will be initialized!!!!!" << endl;
+    break;
   }
 }
 

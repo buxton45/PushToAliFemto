@@ -476,6 +476,7 @@ void AliFemtoESDTrackCutNSigmaFilter::CreateCustomNSigmaFilter(ParticleType aTyp
   default:
     cerr << "E-AliFemtoESDTrackCutNSigmaFilter::CreateCustomNSigmaFilter: Invalid ParticleType"
             "selection '" << aType << "'.  No custom filter will be initialized!!!!!" << endl;
+    break;
   }
 }
 
@@ -502,6 +503,7 @@ void AliFemtoESDTrackCutNSigmaFilter::AddTPCAndTOFNSigmaCut(ParticleType aType, 
   default:
     cerr << "E-AliFemtoESDTrackCutNSigmaFilter::AddTPCAndTOFNSigmaCut: Invalid ParticleType"
             "selection '" << aType << "'.  No cut will be initialized!!!!!" << endl;
+    break;
   }
 }
 
@@ -527,6 +529,7 @@ void AliFemtoESDTrackCutNSigmaFilter::AddTPCNSigmaCut(ParticleType aType, double
   default:
     cerr << "E-AliFemtoESDTrackCutNSigmaFilter::AddTPCNSigmaCut: Invalid ParticleType"
             "selection '" << aType << "'.  No cut will be initialized!!!!!" << endl;
+    break;
   }
 }
 
@@ -552,6 +555,7 @@ void AliFemtoESDTrackCutNSigmaFilter::AddTOFNSigmaCut(ParticleType aType, double
   default:
     cerr << "E-AliFemtoESDTrackCutNSigmaFilter::AddTOFNSigmaCut: Invalid ParticleType"
             "selection '" << aType << "'.  No cut will be initialized!!!!!" << endl;
+    break;
   }
 }
 
@@ -577,6 +581,7 @@ void AliFemtoESDTrackCutNSigmaFilter::SetOverrideImproperPionNSigmaFilter(Partic
   default:
     cerr << "E-AliFemtoESDTrackCutNSigmaFilter::SetOverrideImproperPionNSigmaFilter: Invalid ParticleType"
             "selection '" << aType << "'.  No override call will be made!!!!!" << endl;
+    break;
   }
 }
 

@@ -59,7 +59,6 @@ public:
   double CalcKStar(const AliFemtoLorentzVector&, const AliFemtoLorentzVector&);
   double GetKStarTrue(AliFemtoPair* aPair);
 
-
   int GetMotherBin(const AliFemtoModelHiddenInfo *info);
 
   //inline
