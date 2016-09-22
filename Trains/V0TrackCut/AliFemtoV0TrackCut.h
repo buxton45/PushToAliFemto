@@ -97,10 +97,10 @@ public:
   void SetRemoveMisidentified(bool aRemove);
   void SetUseSimpleMisIDCut(bool aUse);
 
-  void SetInvariantMassRejectK0s(double,double);         // invariant mass window in which to reject misidentified K0s from (Anti)Lambda
-  void SetInvariantMassRejectLambda(double,double);      // invariant mass window in which to reject misidentified Lambda from K0s
-  void SetInvariantMassRejectAntiLambda(double,double);  // invariant mass window in which to reject misidentified AntiLambda from K0s
-  void SetInvMassReject(AliFemtoV0Type aV0Type, double aInvMassMin, double aInvMassMax);  //aV0Type selects one of the above setters
+  void SetInvariantMassRejectK0s(double,double, bool aRemoveMisidentified=true);         // invariant mass window in which to reject misidentified K0s from (Anti)Lambda
+  void SetInvariantMassRejectLambda(double,double, bool aRemoveMisidentified=true);      // invariant mass window in which to reject misidentified Lambda from K0s
+  void SetInvariantMassRejectAntiLambda(double,double, bool aRemoveMisidentified=true);  // invariant mass window in which to reject misidentified AntiLambda from K0s
+  void SetInvMassReject(AliFemtoV0Type aV0Type, double aInvMassMin, double aInvMassMax, bool aRemoveMisidentified=true);  //aV0Type selects one of the above setters
 
   void SetBuildMisIDHistograms(bool aBuild);
   void SetMisIDHisto(AliFemtoV0Type aMisIDV0Type, const int& nbins, const float& aInvMassMin, const float& aInvMassMax);  //allows control over binning

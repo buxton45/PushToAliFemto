@@ -13,6 +13,7 @@
 
 class TH1D;
 
+#include <vector>
 
 /// \class AliFemtoV0TrackCutNSigmaFilter
 /// \brief A class designed to help track cuts test particle calculated NSigma values
@@ -26,12 +27,11 @@ public:
   /// Default Constructor - wide ranges and
   AliFemtoV0TrackCutNSigmaFilter();
 
-  /// Destructor - deletes filters and histograms
-  virtual ~AliFemtoV0TrackCutNSigmaFilter();
-
-//TODO
   AliFemtoV0TrackCutNSigmaFilter(const AliFemtoV0TrackCutNSigmaFilter& aCut);
   AliFemtoV0TrackCutNSigmaFilter& operator=(const AliFemtoV0TrackCutNSigmaFilter& aCut);
+
+  /// Destructor - deletes filters and histograms
+  virtual ~AliFemtoV0TrackCutNSigmaFilter();
 
   /// Main method of the filter. Returns true if V0 passes NSigma
   virtual bool Pass(const AliFemtoV0* aV0);
@@ -77,6 +77,7 @@ public:
   void SetOverrideImproperProtonNSigmaFilter(bool aOverride);
 
   // Methods to help cut out misidentified V0s
+  void CreateCustomV0Rejection(AliFemtoV0Type aV0TypeToReject);
   void AddTPCAndTOFNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, int aDaughterCharge, double aMomMin, double aMomMax, double aNSigmaValueTPC, double aNSigmaValueTOF);
   void AddTPCAndTOFNSigmaCutToV0Rejection(AliFemtoV0Type aV0Type, double aMomMinPos, double aMomMaxPos, double aNSigmaValueTPCPos, double aNSigmaValueTOFPos,
                                                                   double aMomMinNeg, double aMomMaxNeg, double aNSigmaValueTPCNeg, double aNSigmaValueTOFNeg);

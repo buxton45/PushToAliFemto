@@ -62,11 +62,11 @@ AliFemtoV0TrackCut::AliFemtoV0TrackCut():
   fUseSimpleMisIDCut(true),
   fBuildMisIDHistograms(false),
   fInvMassRejectK0sMin(0.0),
-  fInvMassRejectK0sMax(0.0),
+  fInvMassRejectK0sMax(9999.0),
   fInvMassRejectLambdaMin(0.0),
-  fInvMassRejectLambdaMax(0.0),
+  fInvMassRejectLambdaMax(9999.0),
   fInvMassRejectAntiLambdaMin(0.0),
-  fInvMassRejectAntiLambdaMax(0.0),
+  fInvMassRejectAntiLambdaMax(9999.0),
   fK0sMassOfMisIDV0(0),
   fLambdaMassOfMisIDV0(0),
   fAntiLambdaMassOfMisIDV0(0)
@@ -725,38 +725,44 @@ void AliFemtoV0TrackCut::SetUseSimpleMisIDCut(bool aUse)
   fUseSimpleMisIDCut = aUse;
 }
 
-void AliFemtoV0TrackCut::SetInvariantMassRejectK0s(double min, double max)
+void AliFemtoV0TrackCut::SetInvariantMassRejectK0s(double min, double max, bool aRemoveMisidentified)
 {
   fInvMassRejectK0sMin = min;
   fInvMassRejectK0sMax = max;
+
+  SetRemoveMisidentified(aRemoveMisidentified);
 }
 
-void AliFemtoV0TrackCut::SetInvariantMassRejectLambda(double min, double max)
+void AliFemtoV0TrackCut::SetInvariantMassRejectLambda(double min, double max, bool aRemoveMisidentified)
 {
   fInvMassRejectLambdaMin = min;
   fInvMassRejectLambdaMax = max;
+
+  SetRemoveMisidentified(aRemoveMisidentified);
 }
 
-void AliFemtoV0TrackCut::SetInvariantMassRejectAntiLambda(double min, double max)
+void AliFemtoV0TrackCut::SetInvariantMassRejectAntiLambda(double min, double max, bool aRemoveMisidentified)
 {
   fInvMassRejectAntiLambdaMin = min;
   fInvMassRejectAntiLambdaMax = max;
+
+  SetRemoveMisidentified(aRemoveMisidentified);
 }
 
-void AliFemtoV0TrackCut::SetInvMassReject(AliFemtoV0Type aV0Type, double aInvMassMin, double aInvMassMax)
+void AliFemtoV0TrackCut::SetInvMassReject(AliFemtoV0Type aV0Type, double aInvMassMin, double aInvMassMax, bool aRemoveMisidentified)
 {
   switch(aV0Type)
   {
     case kK0s:
-      SetInvariantMassRejectK0s(aInvMassMin,aInvMassMax);
+      SetInvariantMassRejectK0s(aInvMassMin,aInvMassMax,aRemoveMisidentified);
       break;
 
     case kLambda:
-      SetInvariantMassRejectLambda(aInvMassMin,aInvMassMax);
+      SetInvariantMassRejectLambda(aInvMassMin,aInvMassMax,aRemoveMisidentified);
       break;
 
     case kAntiLambda:
-      SetInvariantMassRejectAntiLambda(aInvMassMin,aInvMassMax);
+      SetInvariantMassRejectAntiLambda(aInvMassMin,aInvMassMax,aRemoveMisidentified);
       break;
   }
 
