@@ -86,6 +86,12 @@ AliFemtoV0TrackCutNSigmaFilter& AliFemtoV0TrackCutNSigmaFilter::operator=(const 
   return *this;
 }
 
+
+AliFemtoV0TrackCutNSigmaFilter* AliFemtoV0TrackCutNSigmaFilter::Clone()
+{
+  return(new AliFemtoV0TrackCutNSigmaFilter(*this));
+}
+
 AliFemtoV0TrackCutNSigmaFilter::~AliFemtoV0TrackCutNSigmaFilter()
 {
   delete fPionNSigmaFilter;

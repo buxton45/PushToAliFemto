@@ -29,7 +29,7 @@ public:
 
   AliFemtoV0TrackCutNSigmaFilter(const AliFemtoV0TrackCutNSigmaFilter& aCut);
   AliFemtoV0TrackCutNSigmaFilter& operator=(const AliFemtoV0TrackCutNSigmaFilter& aCut);
-
+  virtual AliFemtoV0TrackCutNSigmaFilter* Clone();
   /// Destructor - deletes filters and histograms
   virtual ~AliFemtoV0TrackCutNSigmaFilter();
 

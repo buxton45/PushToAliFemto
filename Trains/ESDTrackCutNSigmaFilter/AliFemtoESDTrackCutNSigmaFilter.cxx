@@ -58,6 +58,11 @@ AliFemtoESDTrackCutNSigmaFilter& AliFemtoESDTrackCutNSigmaFilter::operator=(cons
   fPionRejection = aCut.fPionRejection;
 }
 
+//________________________________________________________________________________________________________________
+AliFemtoESDTrackCutNSigmaFilter* AliFemtoESDTrackCutNSigmaFilter::Clone()
+{
+  return(new AliFemtoESDTrackCutNSigmaFilter(*this));
+}
 
 //________________________________________________________________________________________________________________
 AliFemtoESDTrackCutNSigmaFilter::~AliFemtoESDTrackCutNSigmaFilter()

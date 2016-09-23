@@ -21,6 +21,7 @@ public:
   AliFemtoESDTrackCutNSigmaFilter();
   AliFemtoESDTrackCutNSigmaFilter(const AliFemtoESDTrackCutNSigmaFilter& aCut);
   AliFemtoESDTrackCutNSigmaFilter& operator=(const AliFemtoESDTrackCutNSigmaFilter& aCut);  //TODO
+  virtual AliFemtoESDTrackCutNSigmaFilter* Clone();
   virtual ~AliFemtoESDTrackCutNSigmaFilter();  //TODO
 
   virtual bool Pass(const AliFemtoTrack* aTrack);
