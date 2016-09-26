@@ -37,6 +37,7 @@ public:
 
   AliFemtoV0TrackCut(const AliFemtoV0TrackCut& aCut);
   AliFemtoV0TrackCut& operator=(const AliFemtoV0TrackCut& aCut);
+  virtual AliFemtoV0TrackCut* Clone();
 
   virtual bool Pass(const AliFemtoV0* aV0);
 

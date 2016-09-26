@@ -158,14 +158,14 @@ AliFemtoModelCorrFctnKStarFull::AliFemtoModelCorrFctnKStarFull(const char *title
 
   fKTrueVsKRecSame = new TH2F(
     TString::Format("KTrueVsKRecSame%s", title), 
-    "k*_{true} vs k*{rec} for Same Event Pairs; k*(GeV/c);",
+    "k*_{true} vs k*_{rec} for Same Event Pairs; k*(GeV/c);",
      aNbins, aKStarLo, aKStarHi,
      aNbins, aKStarLo, aKStarHi);
   fKTrueVsKRecSame->Sumw2();
 
   fKTrueVsKRecMixed = new TH2F(
     TString::Format("KTrueVsKRecMixed%s", title), 
-    "k*_{true} vs k*{rec} for Mixed Event Pairs; k*(GeV/c);",
+    "k*_{true} vs k*_{rec} for Mixed Event Pairs; k*(GeV/c);",
      aNbins, aKStarLo, aKStarHi,
      aNbins, aKStarLo, aKStarHi);
   fKTrueVsKRecMixed->Sumw2();
@@ -176,14 +176,14 @@ AliFemtoModelCorrFctnKStarFull::AliFemtoModelCorrFctnKStarFull(const char *title
 
   fKTrueVsKRecRotSame = new TH2F(
     TString::Format("KTrueVsKRecRotSame%s", title), 
-    "(k*_{true} + k*{rec})/2 vs (k*_{true} - k*{rec})/sqrt(2) for Same Event Pairs; k*(GeV/c);",
+    "(k*_{true} + k*_{rec})/2 vs (k*_{true} - k*_{rec})/sqrt(2) for Same Event Pairs; k*(GeV/c);",
      aNbins, aKStarLo, aKStarHi,
      aNbins, tRotYMin, tRotYMax);
   fKTrueVsKRecRotSame->Sumw2();
 
   fKTrueVsKRecRotMixed = new TH2F(
     TString::Format("KTrueVsKRecRotMixed%s", title), 
-    "(k*_{true} + k*{rec})/2 vs (k*_{true} - k*{rec})/sqrt(2) for Mixed Event Pairs; k*(GeV/c);",
+    "(k*_{true} + k*_{rec})/2 vs (k*_{true} - k*_{rec})/sqrt(2) for Mixed Event Pairs; k*(GeV/c);",
      aNbins, aKStarLo, aKStarHi,
      aNbins, tRotYMin, tRotYMax);
   fKTrueVsKRecRotMixed->Sumw2();

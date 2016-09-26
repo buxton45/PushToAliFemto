@@ -235,6 +235,13 @@ AliFemtoV0TrackCut& AliFemtoV0TrackCut::operator=(const AliFemtoV0TrackCut& aCut
 
 
 //------------------------------
+AliFemtoV0TrackCut* AliFemtoV0TrackCut::Clone()
+{
+  return(new AliFemtoV0TrackCut(*this));
+}
+
+
+//------------------------------
 bool AliFemtoV0TrackCut::Pass(const AliFemtoV0* aV0)
 {
   // test the particle and return

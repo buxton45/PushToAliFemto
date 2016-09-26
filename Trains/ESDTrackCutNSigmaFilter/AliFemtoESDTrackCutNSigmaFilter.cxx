@@ -40,7 +40,10 @@ AliFemtoESDTrackCutNSigmaFilter::AliFemtoESDTrackCutNSigmaFilter(const AliFemtoE
   fUseCustomElectronNSigmaFilter(aCut.fUseCustomElectronNSigmaFilter),
   fPionRejection(aCut.fPionRejection)
 {
-
+  if(aCut.fPionNSigmaFilter) fPionNSigmaFilter = new AliFemtoNSigmaFilter(*aCut.fPionNSigmaFilter);
+  if(aCut.fKaonNSigmaFilter) fKaonNSigmaFilter = new AliFemtoNSigmaFilter(*aCut.fKaonNSigmaFilter);
+  if(aCut.fProtonNSigmaFilter) fProtonNSigmaFilter = new AliFemtoNSigmaFilter(*aCut.fProtonNSigmaFilter);
+  if(aCut.fElectronNSigmaFilter) fElectronNSigmaFilter = new AliFemtoNSigmaFilter(*aCut.fElectronNSigmaFilter);
 }
 
 
@@ -56,6 +59,13 @@ AliFemtoESDTrackCutNSigmaFilter& AliFemtoESDTrackCutNSigmaFilter::operator=(cons
   fUseCustomProtonNSigmaFilter = aCut.fUseCustomProtonNSigmaFilter;
   fUseCustomElectronNSigmaFilter = aCut.fUseCustomElectronNSigmaFilter;
   fPionRejection = aCut.fPionRejection;
+
+  if(aCut.fPionNSigmaFilter) fPionNSigmaFilter = new AliFemtoNSigmaFilter(*aCut.fPionNSigmaFilter);
+  if(aCut.fKaonNSigmaFilter) fKaonNSigmaFilter = new AliFemtoNSigmaFilter(*aCut.fKaonNSigmaFilter);
+  if(aCut.fProtonNSigmaFilter) fProtonNSigmaFilter = new AliFemtoNSigmaFilter(*aCut.fProtonNSigmaFilter);
+  if(aCut.fElectronNSigmaFilter) fElectronNSigmaFilter = new AliFemtoNSigmaFilter(*aCut.fElectronNSigmaFilter);
+
+  return *this;
 }
 
 //________________________________________________________________________________________________________________
