@@ -41,8 +41,8 @@ struct MacroParams {
 };
 
 struct CutVariations {
-  std::vector<double> valuesToVary;  //ex /0.2:0.3:0.4:0.5:0.6\
-  TString cutName;  //ex '/$|Lam|maxDcaV0Daughters\'
+  std::vector<double> valuesToVary;  /*//ex /0.2:0.3:0.4:0.5:0.6\ */
+  TString cutName;  //ex '?$|Lam|maxDcaV0Daughters'
 };
 
 void SetPairCodes(AFALK::AnalysisParams &aAnConfig, MacroParams &aMacroConfig);
@@ -53,7 +53,8 @@ CreateCorrectAnalysis(
   AFALK::AnalysisType aAnType,
   AFALK::AnalysisParams &aAnParams,
   AFALK::EventCutParams &aEvCutParams,
-  AFALK::PairCutParams &aPairCutParams
+  AFALK::PairCutParams &aPairCutParams,
+  const TString &aDirNameModifier
 );
 
 void
@@ -147,8 +148,12 @@ AliFemtoManager* ConfigFemtoAnalysis(const TString& aParamString="")
   for(unsigned int iCutVal=0; iCutVal<tNCutVals; iCutVal++)
   {
     //change the configuration
-    TString tNewParamString = tCutVariations.cutName + TString(" = ") + TString(tCutVariations.valuesToVary[iCutVal]) + TString(";");
-    BuildConfiguration(aParamString,tAnalysisConfig,tEventCutConfig,tPairCutConfig,tMacroConfig,tCutVariations);
+    TString tNewParamString = tCutVariations.cutName + TString(" = ") + TString::Format("%f",tCutVariations.valuesToVary[iCutVal]) + TString(";");
+
+    TString tDirNameModifier = tCutVariations.cutName(1, tCutVariations.cutName.Length() - 1) + TString("|") + TString::Format("%0.2f",tCutVariations.valuesToVary[iCutVal]);
+    tDirNameModifier.ReplaceAll("|","_");
+
+    BuildConfiguration(tNewParamString,tAnalysisConfig,tEventCutConfig,tPairCutConfig,tMacroConfig,tCutVariations);
 
     // loop over centrality ranges
     for(unsigned int iCent = 0; iCent+1 < tMacroConfig.centrality_ranges.size(); iCent += 2)
@@ -168,7 +173,7 @@ AliFemtoManager* ConfigFemtoAnalysis(const TString& aParamString="")
       {
         
         //Build unique analysis for each pair type in each centrality bin
-        AliFemtoAnalysisLambdaKaon *tAnalysis = CreateCorrectAnalysis(aParamString,tMacroConfig.pair_codes[iPair],tAnalysisConfig,tEventCutConfig,tPairCutConfig);
+        AliFemtoAnalysisLambdaKaon *tAnalysis = CreateCorrectAnalysis(tNewParamString,tMacroConfig.pair_codes[iPair],tAnalysisConfig,tEventCutConfig,tPairCutConfig,tDirNameModifier);  //TODO aParamString or tNewParamString
         //TODO get pair cut to change for LamKchP and LamKchM
 
         tManager->AddAnalysis(tAnalysis);
@@ -249,7 +254,8 @@ CreateCorrectAnalysis(
   AFALK::AnalysisType aAnType,
   AFALK::AnalysisParams &aAnParams,
   AFALK::EventCutParams &aEvCutParams,
-  AFALK::PairCutParams &aPairCutParams
+  AFALK::PairCutParams &aPairCutParams,
+  const TString &aDirNameModifier
 )
 {
   AliFemtoAnalysisLambdaKaon *tAnalysis;
@@ -292,7 +298,7 @@ CreateCorrectAnalysis(
     }
     BuildParticleConfiguration(aText,tV0CutConfig1);
     BuildParticleConfiguration(aText,tV0CutConfig2);
-    tAnalysis = new AliFemtoAnalysisLambdaKaon(aAnParams,aEvCutParams,aPairCutParams,tV0CutConfig1,tV0CutConfig2);
+    tAnalysis = new AliFemtoAnalysisLambdaKaon(aAnParams,aEvCutParams,aPairCutParams,tV0CutConfig1,tV0CutConfig2,aDirNameModifier);
     break;
 
 
@@ -340,7 +346,7 @@ CreateCorrectAnalysis(
     }
     BuildParticleConfiguration(aText,tV0CutConfig1);
     BuildParticleConfiguration(aText,tESDCutConfig);
-    tAnalysis = new AliFemtoAnalysisLambdaKaon(aAnParams,aEvCutParams,aPairCutParams,tV0CutConfig1,tESDCutConfig);
+    tAnalysis = new AliFemtoAnalysisLambdaKaon(aAnParams,aEvCutParams,aPairCutParams,tV0CutConfig1,tESDCutConfig,aDirNameModifier);
     break;
 
 
@@ -368,7 +374,7 @@ CreateCorrectAnalysis(
     }
     BuildParticleConfiguration(aText,tXiCutConfig);
     BuildParticleConfiguration(aText,tESDCutConfig);
-    tAnalysis = new AliFemtoAnalysisLambdaKaon(aAnParams,aEvCutParams,aPairCutParams,tXiCutConfig,tESDCutConfig);
+    tAnalysis = new AliFemtoAnalysisLambdaKaon(aAnParams,aEvCutParams,aPairCutParams,tXiCutConfig,tESDCutConfig,aDirNameModifier);
     break;
   }
 
@@ -454,14 +460,17 @@ BuildConfiguration(
 
     case '?':  //Centrality in Macro Params
     {
-      if(!tLine[1].EqualTo(TString("/"))) tCmd = tCutVariationsName + "." + tLine(1, tLine.Length() - 1);
-
+      if(!(tLine[1] == '[')) 
+      {
+        tCmd = tCutVariationsName + ".cutName = '" + tLine(1, tLine.Length() - 1) + "'";
+        tCmd.ReplaceAll("'", '"');
+      }
       else
       {
-        unsigned int tRangeEnd = tLine.Index("\");
+        unsigned int tRangeEnd = tLine.Index("]");
         if(tRangeEnd == -1) tRangeEnd = tLine.Length();
 
-        TString tCentralityRanges = tLine(1, tRangeEnd - 1);
+        TString tCentralityRanges = tLine(2, tRangeEnd - 1);
         TObjArray *tRangeGroups = tCentralityRanges.Tokenize(",");
         TIter tNextRangeGroup(tRangeGroups);
         TObjString *tRangeGroup = NULL;
@@ -473,7 +482,7 @@ BuildConfiguration(
           TObjString *tSubRange_it = NULL;
           while(tSubRange_it = (TObjString*)tNextSubRange())
           {
-            TString tNext = TString::Format("%0.2d", tSubRange_it->String().Atoi());
+            TString tNext = TString::Format("%0.2f", tSubRange_it->String().Atof());
 
             tCmd = tCutVariationsName + ".valuesToVary.push_back(" + tNext + ");";
             cout << "I-BuildConfiguration: `" << tCmd << "`\n";
@@ -481,10 +490,10 @@ BuildConfiguration(
 
           }
         }
-
+        continue;
       }
-
     }
+      break;
 
     default:
       continue;
