@@ -79,6 +79,12 @@ AliFemtoAnalysisLambdaKaon::AliFemtoAnalysisLambdaKaon(AliFemtoAnalysisLambdaKao
   fMaxCent = maxMult/10.;
 
   fOutputName += TString::Format("_%0.0f%0.0f",fMinCent,fMaxCent);
+  if(!aDirNameModifier.IsNull())
+  {
+    fOutputName += "_";
+    fOutputName += aDirNameModifier;
+  }
+
 
   fCollectionOfCfs = new AliFemtoCorrFctnCollection;
 
@@ -1395,6 +1401,7 @@ AliFemtoAnalysisLambdaKaon::DefaultAntiLambdaCutParams()
 
   tReturnParams.useSimpleMisID = true;
   tReturnParams.buildMisIDHistograms = true;
+  tReturnParams.useCustomMisID = false;
 
   tReturnParams.eta = 0.8;
   tReturnParams.minPt = 0.4;
